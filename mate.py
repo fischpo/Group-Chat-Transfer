@@ -1,21 +1,31 @@
-import json
 import csv
-
+locfile=[r""]
+deffie=""
 datadict={}
 val=False
 def searche(dat,ind,txt,trig=1,trig2=0):
 	for i in ind:
 		try:
 			if trig:
-				dat[i[0]][txt]=i[1]
+				if trig2:
+					dat[i[0]][txt]=deffie
+				else:
+					dat[i[0]][txt]=i[1]
 			else:
 				dat[i[0]][txt]=[i[1],i[2]]
-				if trig2:
-					print(i[0])
+				
 		except KeyError:
 			pass
-		
-	return dat
+	if trig2:
+		for nm in locfile:
+			with open(nm,"r") as fws:
+				daloc=eval(fws.read())
+				for i in daloc:
+					try:
+						dat[i[0].decode('utf8')]["attachment"]=i[1]
+					except KeyError:
+						pass
+	return dat	
 
 with open('replied_to.csv',newline='', encoding='utf-8') as fil:
     aa = list(csv.reader(fil))
@@ -77,7 +87,7 @@ for i in messages:
 	datadict[i[0]]={"sender":i[1],"mssgcontent":i[2],"reacts":"","replyto":"","attachment":""}
 
 print(attachments[0:5])
-datadict=searche(datadict,attachments,"attachment")
+datadict=searche(datadict,attachments,"attachment",1,1)
 print("--"*45)
 print(reply[0:5])
 datadict=searche(datadict,reply,"replyto")
@@ -88,7 +98,7 @@ datadict=searche(datadict,embeds,"embedlink")
 print("--"*45)
 """
 print(reactions[0:5])
-datadict=searche(datadict,reactions,"reacts",0,0)
+datadict=searche(datadict,reactions,"reacts",0)
 print("--"*45)
 print("_"*45)
 with open("jhsadj.txt","w",encoding="utf-8") as ff: 

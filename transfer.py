@@ -5,6 +5,7 @@ from discord.utils import get
 from reader import mssgread
 try:
     TOKEN = ""
+    usericon={"defaultimage":"https://i.imgur.com/LYN3cJD.png"}
     intents = discord.Intents().all()
     bot = commands.Bot(command_prefix=".",intents=intents)
     @bot.command(name='transferstart')
@@ -19,7 +20,6 @@ try:
           with open("reply.list","w") as fil:
             fil.write("{}")
             idlist={}
-        pfpuser={"defaultimage":"https://i.imgur.com/LYN3cJD.png"}
         pltmp=1
         if list(idlist):
             lastentry=list(idlist)[-1]
@@ -34,9 +34,9 @@ try:
               continue
           embes= discord.Embed(title=msggp[ms]['sender'], description=msggp[ms]['mssgcontent'])
           try:
-               embes.set_thumbnail(url=pfpuser[msggp[ms]['sender']])
+               embes.set_thumbnail(url=usericon[msggp[ms]['sender']])
           except:
-               embes.set_thumbnail(url=pfpuser["defaultimage"])
+               embes.set_thumbnail(url=usericon["defaultimage"])
           if msggp[ms]['replyto']:
                   try:
                       replid=idlist[msggp[ms]['replyto']]

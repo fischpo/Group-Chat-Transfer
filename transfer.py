@@ -7,7 +7,7 @@ try:
     TOKEN = ""
     intents = discord.Intents().all()
     bot = commands.Bot(command_prefix=".",intents=intents)
-    @bot.command(name='transferchat')
+    @bot.command(name='transferstart')
     async def transfere(ctx):
         await ctx.channel.purge(limit=1)
 

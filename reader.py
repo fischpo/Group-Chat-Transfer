@@ -1,32 +1,18 @@
 import csv
 import json
 import os
-deffie=r""
 datadict={}
 val=False
 def searche(dat,ind,txt,trig=1,trig2=0):
 	for i in ind:
 		try:
 			if trig:
-				if trig2:
-					dat[i[0]][txt]=deffie
-				else:
-					dat[i[0]][txt]=i[1]
+				dat[i[0]][txt]=i[1]
 			else:
 				dat[i[0]][txt]=[i[1],i[2]]
 				
 		except KeyError:
 			pass
-	if trig2:
-		for nm in locfile:
-			with open(nm,"r") as fws:
-				daloc=eval(fws.read())
-				for i in daloc:
-					try:
-						if os.path.isfile(i[1]):
-							dat[i[0].decode('utf8')]["attachment"]=i[1]
-					except KeyError:
-						pass
 	return dat	
 def mssgread():
 	global datadict

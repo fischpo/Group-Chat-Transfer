@@ -5,7 +5,6 @@ from discord.utils import get
 from reader import mssgread
 try:
     TOKEN = ""
-    GUILD = ""
     intents = discord.Intents().all()
     bot = commands.Bot(command_prefix=".",intents=intents)
     @bot.command(name='transferchat')
@@ -13,8 +12,13 @@ try:
         await ctx.channel.purge(limit=1)
 
         msggp=mssgread()
-        with open("reply.list","+r") as fil:
+        try:
+          with open("reply.list","+r") as fil:
             idlist=eval(fil.read())
+        except:
+          with open("reply.list","w") as fil:
+            fil.write("{}")
+            idlist={}
         pfpuser={"defaultimage":"https://i.imgur.com/LYN3cJD.png"}
         pltmp=1
         if list(idlist):
@@ -33,52 +37,7 @@ try:
                embes.set_thumbnail(url=pfpuser[msggp[ms]['sender']])
           except:
                embes.set_thumbnail(url=pfpuser["defaultimage"])
-          if msggp[ms]['attachment']:
-              trigge=1
-              locattach=os.path.basename(msggp[ms]['attachment'])
-              lilocatch=os.path.splitext(locattach)
-              file = discord.File(msggp[ms]['attachment'],filename=locattach)
-              if lilocatch[1] in ['.jpg','.jpeg','.png','.gif','.webp']:
-                  trigge=0
-                  embes.set_image(url=f'attachment://{lilocatch[0]}{lilocatch[1]}')
-              if msggp[ms]['replyto']:
-                  try:
-                      replid=idlist[msggp[ms]['replyto']]
-                  except KeyError:
-                      replid=""
-                  if replid:
-                      replymssg = await ctx.channel.fetch_message(replid)
-                      if trigge:
-                          await replymssg.reply(embed=embes)
-                          sentmsg=await ctx.channel.send(file=file)
-                          if msggp[ms]['embed']:
-                              await ctx.channel.send(msggp[ms]['embed'])
-                      else:
-                          sentmsg=await replymssg.reply(embed=embes,file=file)
-                          if msggp[ms]['embed']:
-                              await ctx.channel.send(msggp[ms]['embed'])
-                  else:
-                    if trigge:
-                          await ctx.channel.send(embed=embes)
-                          sentmsg=await ctx.channel.send(file=file)
-                          if msggp[ms]['embed']:
-                              await ctx.channel.send(msggp[ms]['embed'])
-                    else:
-                        sentmsg=await ctx.channel.send(embed=embes,file=file)
-                        if msggp[ms]['embed']:
-                              await ctx.channel.send(msggp[ms]['embed'])
-              else:
-                  if trigge:
-                          await ctx.channel.send(embed=embes)
-                          sentmsg=await ctx.channel.send(file=file)
-                          if msggp[ms]['embed']:
-                              await ctx.channel.send(msggp[ms]['embed'])
-                  else:
-                      sentmsg=await ctx.channel.send(embed=embes,file=file)
-                      if msggp[ms]['embed']:
-                              await ctx.channel.send(msggp[ms]['embed'])
-          else:
-              if msggp[ms]['replyto']:
+          if msggp[ms]['replyto']:
                   try:
                       replid=idlist[msggp[ms]['replyto']]
                   except KeyError:
@@ -92,10 +51,14 @@ try:
                       sentmsg=await ctx.channel.send(embed=embes)
                       if msggp[ms]['embed']:
                               await ctx.channel.send(msggp[ms]['embed'])
-              else:
+                      elif msggp[ms]['attachment']:
+                            await ctx.channel.send(msggp[ms]['attachment'])
+          else:
                   sentmsg=await ctx.channel.send(embed=embes)
                   if msggp[ms]['embed']:
                               await ctx.channel.send(msggp[ms]['embed'])
+                  elif msggp[ms]['attachment']:
+                            await ctx.channel.send(msggp[ms]['attachment'])
               
           idlist[ms]=sentmsg.id
           with open("reply.list","w") as fil:
